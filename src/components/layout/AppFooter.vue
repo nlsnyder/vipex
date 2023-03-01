@@ -1,12 +1,14 @@
 <template>
   <footer>
-    <div class="footer-grid">
-      <div>
+    <div class="footer-grid grid-rows">
+      <div
+        class="flex flex-col items-center md:items-start order-4 md:order-1 col-span-3 md:col-span-1"
+      >
         <div class="company-heading">
           <img src="@/assets/logo.svg" alt="Vuetify footer logo" width="30" />
           <span class="company-name">ipex</span>
         </div>
-        <div class="contact-icons">
+        <div class="contact-icons shrink">
           <font-awesome-icon
             class="footer-icon twitter"
             icon="fa-brands fa-twitter"
@@ -26,7 +28,7 @@
         </div>
         <p>Copyright &copy; 2023 by Vipex,<br />Inc. All rights reserved.</p>
       </div>
-      <div>
+      <div class="order-3 md:order-2">
         <h3 class="margin-b font-medium">Contact Information</h3>
         <p class="margin-b">123 Main St. Suite 414<br />Milwaukee, WI 53707</p>
         <p>
@@ -35,7 +37,7 @@
           >(414) 546-9054
         </p>
       </div>
-      <div>
+      <div class="order-1 md:order-3">
         <h3 class="margin-b font-medium">Learn More</h3>
         <ul>
           <li class="font-normal">About Vipex</li>
@@ -44,7 +46,7 @@
           <li class="font-normal">Careers</li>
         </ul>
       </div>
-      <div>
+      <div class="order-2 md:order-4">
         <h3 class="margin-b font-medium">Other Information</h3>
         <ul>
           <li class="font-normal">FAQ</li>
@@ -67,11 +69,22 @@ footer {
 
 .footer-grid {
   display: grid;
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
-  grid-template-columns: 1.5fr 1.5fr 1fr 1fr;
-  column-gap: 4.8rem;
-  row-gap: 6.4rem;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr min(280px, 1fr);
+  column-gap: 2rem;
+  row-gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .footer-grid {
+    width: 70%;
+    grid-template-columns: 1.5fr 1.5fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    column-gap: 4.8rem;
+    row-gap: 6.4rem;
+  }
 }
 
 .company-heading {

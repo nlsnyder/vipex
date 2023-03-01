@@ -1,11 +1,13 @@
 <template>
   <HeroSection class="hero" />
   <HeroIconList />
+  <AppFooter />
 </template>
 
 <script setup lang="ts">
 import HeroSection from "@/components/hero/HeroSection.vue";
 import HeroIconList from "@/components/hero/HeroIconList.vue";
+import AppFooter from "@/components/layout/AppFooter.vue";
 </script>
 
 <style scoped>

@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import("../views/AddExpenseView.vue"),
     },
     {
+      path: "/view-expenses",
+      name: "view",
+      component: () => import("../views/ViewExpensesView.vue"),
+    },
+    {
       path: "/docs",
       name: "docs",
       component: () => import("../views/HomeView.vue"),

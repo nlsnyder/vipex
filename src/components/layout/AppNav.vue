@@ -9,7 +9,7 @@
       </div>
       <ul>
         <li><router-link to="/add-expense">Add Expense</router-link></li>
-        <li>View Expenses</li>
+        <li><router-link to="/view-expenses">View Expenses</router-link></li>
       </ul>
       <div>
         <button class="btn">Login</button>
