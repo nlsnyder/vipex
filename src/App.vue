@@ -1,5 +1,5 @@
 <template>
-  <AppNav />
+  <AppNav v-if="store.authState.user" />
   <main>
     <router-view />
   </main>
@@ -7,6 +7,10 @@
 
 <script setup lang="ts">
 import AppNav from "@/components/layout/AppNav.vue";
+import { useAuthStore } from "./stores/auth";
+
+const store = useAuthStore();
+console.log(store.authState.user);
 </script>
 
 <style>

@@ -52,6 +52,22 @@ defineProps<{
   width: 90%;
   top: 25%;
   left: 5%;
+  animation-name: slidedown;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slidedown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @media (min-width: 768px) {

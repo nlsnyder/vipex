@@ -12,8 +12,7 @@
         <li><router-link to="/view-expenses">View Expenses</router-link></li>
       </ul>
       <div>
-        <button class="btn">Login</button>
-        <button class="action-btn btn">Sign Up</button>
+        <button class="action-btn btn">Sign out</button>
       </div>
     </nav>
   </header>

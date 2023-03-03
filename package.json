@@ -20,6 +20,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@mdi/font": "5.9.55",
+    "firebase": "^9.17.1",
+    "firebaseui": "^6.0.2",
     "pinia": "^2.0.28",
     "roboto-fontface": "*",
     "vue": "^3.2.45",
