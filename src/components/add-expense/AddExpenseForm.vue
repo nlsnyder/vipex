@@ -129,7 +129,6 @@ const currentDate = new Date(
 const submitExpense = (fields: UserExpense) => {
   fields.itemId = uuid.v4();
   store.addExpense(fields);
-  console.log("emitting form submit event...");
   emit("formSubmit", { ok: true, messages: ["Your expense has been added!"] });
 };
 </script>

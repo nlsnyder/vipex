@@ -1,5 +1,5 @@
 <template>
-  <AppNav v-if="store.authState.user" />
+  <AppNav v-if="store.authState.isAuthenticated" />
   <main>
     <router-view />
   </main>
@@ -7,10 +7,24 @@
 
 <script setup lang="ts">
 import AppNav from "@/components/layout/AppNav.vue";
+import { onMounted, onUnmounted } from "vue";
+import { getAuth } from "@firebase/auth";
 import { useAuthStore } from "./stores/auth";
 
 const store = useAuthStore();
-console.log(store.authState.user);
+
+onMounted(() => {
+  if (window.localStorage.getItem("authenticated") === "true") {
+    store.setAuthState({
+      user: getAuth().currentUser,
+      isAuthenticated: true,
+    });
+  }
+});
+
+onUnmounted(() => {
+  window.localStorage.setItem("authenticated", "false");
+});
 </script>
 
 <style>
