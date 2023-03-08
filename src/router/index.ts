@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HeroView from "@/views/HeroView.vue";
-import { getAuth } from "firebase/auth";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +11,11 @@ const router = createRouter({
         requiresAuth: true,
       },
       component: HeroView,
+    },
+    {
+      path: "/signin",
+      name: "signIn",
+      component: () => import("../views/SignInView.vue"),
     },
     {
       path: "/register",
@@ -37,28 +41,14 @@ const router = createRouter({
   ],
 });
 
-// // Should prevent refresh from removing logged in status of user
-// const getCurrentUser = () => {
-//   return new Promise((resolve, reject) => {
-//     const removeListener = onAuthStateChanged(
-//       getAuth(),
-//       (user) => {
-//         removeListener();
-//         resolve(user);
-//       },
-//       reject
-//     );
-//   });
-// };
-
 router.beforeEach(async (to) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    console.log(getAuth());
     if (
       !window.localStorage.getItem("authenticated") &&
-      to.name !== "register"
+      to.name !== "register" &&
+      to.name !== "signin"
     ) {
-      return { name: "register" };
+      return { name: "signIn" };
     }
   }
 });

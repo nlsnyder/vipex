@@ -44,7 +44,7 @@ const signUserOut = () => {
   signOut(auth).then(() => {
     window.localStorage.clear();
     store.clearAuthState();
-    router.push("/register");
+    router.push("/signin");
   });
 };
 </script>

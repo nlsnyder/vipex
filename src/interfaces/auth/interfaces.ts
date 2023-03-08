@@ -5,8 +5,11 @@ export interface BaseAuthProfile {
   user: FirebaseUser | null | undefined;
 }
 
-export interface RegisterFormState {
+export interface BaseAuthFormState {
   showPw: boolean;
-  showConfirmPw: boolean;
   errors: string[];
+}
+
+export interface RegisterFormState extends BaseAuthFormState {
+  showConfirmPw: boolean;
 }
