@@ -3,18 +3,8 @@
     type="form"
     name="signInForm"
     id="signInForm"
+    :actions="false"
     form-class="flex flex-col items-center justify-center w-4/6 sm:w-1/2 md:w-1/3 lg:w-1/4 gap-4 mt-8"
-    :submit-attrs="{
-      inputClass:
-        'border p-2 w-full mt-5 rounded border-slate-400 hover:text-white hover:bg-slate-900 hover:border-slate-900',
-      outerClass: 'w-full',
-      wrapperClass: 'w-full',
-    }"
-    submit-label="Sign in"
-    :actions-class="{
-      'w-full': true,
-      grow: true,
-    }"
     @submit="signInEmailAndPassword"
   >
     <FormKit
@@ -61,6 +51,22 @@
         {{ error }}
       </p>
     </div>
+    <FormKit
+      type="submit"
+      :classes="{
+        input:
+          'border p-2 w-full mt-5 rounded border-slate-400 hover:text-white hover:bg-slate-900 hover:border-slate-900 flex gap-2 items-center justify-center',
+        outer: 'w-full',
+        wrapper: 'w-full',
+      }"
+    >
+      <img
+        v-show="formState.loading"
+        src="../../assets/loader-icon.webp"
+        class="animate-spin h-5 w-5"
+        alt="spinner"
+      /><span>Sign in</span>
+    </FormKit>
   </FormKit>
 </template>
 
@@ -82,6 +88,7 @@ const props = defineProps<{
 const formState = reactive<BaseAuthFormState>({
   showPw: false,
   errors: [],
+  loading: false,
 });
 
 const allErrors = computed(() => {
@@ -95,18 +102,26 @@ const signInEmailAndPassword = async ({
   email: string;
   password: string;
 }) => {
+  console.log(email, password);
   try {
+    // Update form state
+    formState.loading = true;
     formState.errors = [];
+
+    // login user through firebase
     const { user } = await signInWithEmailAndPassword(
       getAuth(),
       email,
       password
     );
+
+    // Update state, store authenticated user info and navigate to home page
+    formState.loading = false;
     window.localStorage.setItem("authenticated", "true");
     store.setAuthState({ isAuthenticated: true, user });
     router.push("/");
   } catch (error) {
-    console.log(error.code);
+    formState.loading = false;
     if (error instanceof FirebaseError) {
       formState.errors.push(convertFirebaseAuthError(error.code));
     }

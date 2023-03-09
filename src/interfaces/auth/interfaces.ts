@@ -8,6 +8,7 @@ export interface BaseAuthProfile {
 export interface BaseAuthFormState {
   showPw: boolean;
   errors: string[];
+  loading?: boolean;
 }
 
 export interface RegisterFormState extends BaseAuthFormState {

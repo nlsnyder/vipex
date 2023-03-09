@@ -3,17 +3,8 @@
     type="form"
     name="registerForm"
     id="registerForm"
+    :actions="false"
     form-class="flex flex-col items-center justify-center w-4/6 sm:w-1/2 md:w-1/3 lg:w-1/4 gap-4 mt-8"
-    :submit-attrs="{
-      inputClass:
-        'border p-2 w-full mt-5 rounded border-slate-400 hover:text-white hover:bg-slate-900 hover:border-slate-900',
-      outerClass: 'w-full',
-      wrapperClass: 'w-full',
-    }"
-    :actions-class="{
-      'w-full': true,
-      grow: true,
-    }"
     @submit="registerEmailAndPassword"
   >
     <FormKit
@@ -84,6 +75,22 @@
         {{ error }}
       </p>
     </div>
+    <FormKit
+      type="submit"
+      :classes="{
+        input:
+          'border p-2 w-full mt-5 rounded border-slate-400 hover:text-white hover:bg-slate-900 hover:border-slate-900 flex gap-2 items-center justify-center',
+        outer: 'w-full',
+        wrapper: 'w-full',
+      }"
+    >
+      <img
+        v-show="formState.loading"
+        src="../../assets/loader-icon.webp"
+        class="animate-spin h-5 w-5"
+        alt="spinner"
+      /><span>Submit</span>
+    </FormKit>
   </FormKit>
 </template>
 
