@@ -4,6 +4,9 @@
     name="registerForm"
     id="registerForm"
     :actions="false"
+    :messages-class="{
+      hidden: true,
+    }"
     form-class="flex flex-col items-center justify-center w-4/6 sm:w-1/2 md:w-1/3 lg:w-1/4 gap-4 mt-8"
     @submit="registerEmailAndPassword"
   >
@@ -79,7 +82,7 @@
       type="submit"
       :classes="{
         input:
-          'border p-2 w-full mt-5 rounded border-slate-400 hover:text-white hover:bg-slate-900 hover:border-slate-900 flex gap-2 items-center justify-center',
+          'border p-2 w-full mt-5 rounded border-slate-400 hover:bg-gray-100 flex gap-2 items-center justify-center',
         outer: 'w-full',
         wrapper: 'w-full',
       }"
@@ -110,6 +113,7 @@ const formState = reactive<RegisterFormState>({
   showPw: false,
   showConfirmPw: false,
   errors: [],
+  loading: false,
 });
 
 const registerEmailAndPassword = async ({
@@ -122,15 +126,20 @@ const registerEmailAndPassword = async ({
   try {
     // clear out previous errors
     formState.errors = [];
+    formState.loading = true;
     const { user } = await createUserWithEmailAndPassword(
       getAuth(),
       email,
       password
     );
+    formState.loading = false;
+    // save auth state in local storage and state
     window.localStorage.setItem("authenticated", "true");
+    window.localStorage.setItem("lastLogin", new Date().toLocaleString());
     store.setAuthState({ isAuthenticated: true, user });
     router.push("/");
   } catch (error: unknown) {
+    formState.loading = false;
     if (error instanceof FirebaseError) {
       formState.errors.push(convertFirebaseAuthError(error.code));
     }

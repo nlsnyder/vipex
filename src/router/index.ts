@@ -44,9 +44,10 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (
-      !window.localStorage.getItem("authenticated") &&
-      to.name !== "register" &&
-      to.name !== "signin"
+      !window.localStorage.getItem("authenticated") ||
+      (window.localStorage.getItem("authenticated") === "false" &&
+        to.name !== "register" &&
+        to.name !== "signin")
     ) {
       return { name: "signIn" };
     }
