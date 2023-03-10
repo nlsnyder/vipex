@@ -28,4 +28,4 @@ coverage
 *.sw?
 
 # Custom files
-firebase.config.ts
+*.config.ts
