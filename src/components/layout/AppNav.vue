@@ -11,13 +11,43 @@
         <li><router-link to="/add-expense">Add Expense</router-link></li>
         <li><router-link to="/view-expenses">View Expenses</router-link></li>
       </ul>
-      <div>
-        <button class="btn">Login</button>
-        <button class="action-btn btn">Sign Up</button>
+      <div v-if="isLoggedIn">
+        <button @click="signUserOut" class="action-btn btn">Sign out</button>
       </div>
     </nav>
   </header>
 </template>
+
+<script setup lang="ts">
+import { Auth, getAuth, onAuthStateChanged, signOut } from "@firebase/auth";
+import { onMounted, ref } from "vue";
+import router from "@/router";
+import { useAuthStore } from "@/stores/auth";
+
+const store = useAuthStore();
+
+const isLoggedIn = ref(false);
+
+let auth: Auth;
+onMounted(() => {
+  auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isLoggedIn.value = true;
+    } else {
+      isLoggedIn.value = false;
+    }
+  });
+});
+
+const signUserOut = () => {
+  signOut(auth).then(() => {
+    window.localStorage.clear();
+    store.clearAuthState();
+    router.push("/signin");
+  });
+};
+</script>
 
 <style scoped>
 .navigation {

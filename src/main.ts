@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { plugin, defaultConfig } from "@formkit/vue";
 import { applicationIcons } from "@formkit/icons";
 import { createPinia } from "pinia";
+import { firebaseConfig } from "../firebase.config";
+import { initializeApp } from "firebase/app";
 import withUUID from "vue-uuid";
 import "./index.css";
 
@@ -47,6 +49,9 @@ library.add(
   faArrowRight,
   faQuestion
 );
+
+//initialize firebase app
+initializeApp(firebaseConfig);
 
 withUUID(
   createApp(App)

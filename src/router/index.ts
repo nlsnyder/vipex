@@ -7,32 +7,51 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
+      meta: {
+        requiresAuth: true,
+      },
       component: HeroView,
+    },
+    {
+      path: "/signin",
+      name: "signIn",
+      component: () => import("../views/SignInView.vue"),
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: () => import("../views/RegisterView.vue"),
     },
     {
       path: "/add-expense",
       name: "add",
+      meta: {
+        requiresAuth: true,
+      },
       component: () => import("../views/AddExpenseView.vue"),
     },
     {
       path: "/view-expenses",
       name: "view",
+      meta: {
+        requiresAuth: true,
+      },
       component: () => import("../views/ViewExpensesView.vue"),
     },
-    {
-      path: "/docs",
-      name: "docs",
-      component: () => import("../views/HomeView.vue"),
-    },
-    {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AboutView.vue"),
-    },
   ],
+});
+
+router.beforeEach(async (to) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (
+      !window.localStorage.getItem("authenticated") ||
+      (window.localStorage.getItem("authenticated") === "false" &&
+        to.name !== "register" &&
+        to.name !== "signin")
+    ) {
+      return { name: "signIn" };
+    }
+  }
 });
 
 export default router;
