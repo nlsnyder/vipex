@@ -119,10 +119,10 @@ const signInEmailAndPassword = async ({
 
     // Update state, store authenticated user info and navigate to home page
     formState.loading = false;
-    window.localStorage.setItem("authenticated", "true");
-    window.localStorage.setItem("lastLogin", new Date().toLocaleString());
     store.setAuthState({ isAuthenticated: true, user });
     router.push("/");
+    window.localStorage.setItem("authenticated", "true");
+    window.localStorage.setItem("lastLogin", new Date().toLocaleString());
   } catch (error) {
     formState.loading = false;
     if (error instanceof FirebaseError) {

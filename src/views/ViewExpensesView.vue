@@ -1,13 +1,14 @@
 <template>
+  <div v-if="false" class="my-12 text-center">Loading...</div>
   <div
-    v-if="expensesExist"
+    v-else-if="expensesExist"
     class="height-custom w-10/12 lg:w-1/2 m-auto my-12 flex flex-col"
   >
     <h2 class="mb-10 text-3xl text-center">Expenses</h2>
     <div class="background p-3 md:p-10 rounded-lg shadow-lg">
       <ul class="list-none flex flex-col gap-y-6">
         <li
-          v-for="expense in store.expenses"
+          v-for="expense in queryState.userExpenses"
           :key="expense.itemId"
           class="flex items-baseline gap-x-4 py-3 pl-3 pr-5 background-light rounded-lg shadow"
         >
@@ -46,14 +47,23 @@
 </template>
 
 <script setup lang="ts">
-import { useExpensesStore } from "@/stores/expenses";
+import { UserExpense } from "@/interfaces/expenses/interfaces";
+import { FirebaseService } from "@/services/FirebaseService";
+import { useAuthStore } from "@/stores/auth";
 import { getAssociatedMonth } from "@/util/enums";
-import { computed } from "vue";
-const store = useExpensesStore();
+import { User, getAuth } from "@firebase/auth";
+import { computed, onMounted, reactive } from "vue";
+const authStore = useAuthStore();
+const firebase = new FirebaseService();
+
+const queryState = reactive<{ loading: boolean; userExpenses: UserExpense[] }>({
+  loading: false,
+  userExpenses: [],
+});
 
 // Computed Properties
 const expensesExist = computed(() => {
-  return store.expenses.length > 0;
+  return queryState.userExpenses.length > 0;
 });
 
 const formattedPrice = (amount: string | number) => {
@@ -75,6 +85,25 @@ const getYear = (date: string) => {
 };
 
 // Component Functions
+onMounted(async () => {
+  let auth: User | null;
+  if (!authStore.authState.user) {
+    auth = getAuth().currentUser;
+    authStore.setAuthState({ ...authStore.authState, user: auth });
+  } else {
+    auth = authStore.authState.user;
+  }
+  // if (response) {
+  //   if (response.status === 200) {
+  //     const data = response.data;
+  //     // Only need value object for expense, not associated id that is created with it in Firebase POST
+  //     // So we destructure the second value of array which is the value for this key on response.data
+  //     for (const [, value] of Object.entries(data)) {
+  //       userExpenses.value.push(value);
+  //     }
+  //   }
+  // }
+});
 </script>
 
 <style scoped>

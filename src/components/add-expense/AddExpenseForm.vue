@@ -96,10 +96,15 @@
 import { UserExpense } from "@/interfaces/expenses/interfaces";
 import { FormKit } from "@formkit/vue";
 import { uuid } from "vue-uuid";
-import { useExpensesStore } from "@/stores/expenses";
 import { BaseFirebaseResponse } from "@/interfaces/expenses/interfaces";
+import { FirebaseService } from "@/services/FirebaseService";
+import { useAuthStore } from "@/stores/auth";
+import { getAuth, User } from "firebase/auth";
+import { AxiosResponse } from "axios";
 
-const store = useExpensesStore();
+const firebase = new FirebaseService();
+const authStore = useAuthStore();
+
 const emit = defineEmits<{
   (e: "formSubmit", response: BaseFirebaseResponse): void;
 }>();
@@ -126,10 +131,40 @@ const currentDate = new Date(
 );
 
 // Component Functions
-const submitExpense = (fields: UserExpense) => {
+const submitExpense = async (fields: UserExpense) => {
   fields.itemId = uuid.v4();
-  store.addExpense(fields);
-  emit("formSubmit", { ok: true, messages: ["Your expense has been added!"] });
+
+  // Confirm we currently have a signed in user, if not, try to get valid auth from Firebase
+  let auth: User | null;
+  if (!authStore.authState.user) {
+    auth = getAuth().currentUser;
+    authStore.setAuthState({ ...authStore.authState, user: auth });
+  } else {
+    auth = authStore.authState.user;
+  }
+  try {
+    // Add expense for user in firebase
+    const response: AxiosResponse<UserExpense, any> | null =
+      await firebase.addExpenseForUser(auth?.uid, fields, {
+        method: "POST",
+      });
+    if (response != null && response.status === 200) {
+      emitFormSubmit(true, ["Your expense has been added!"]);
+    } else {
+      emitFormSubmit(false, [
+        "Something went wrong while adding you expense...please try again.",
+      ]);
+    }
+  } catch (error) {
+    emitFormSubmit(false, ["An error occurred while adding your expense."]);
+  }
+};
+
+const emitFormSubmit = (isOk: boolean, messageList: string[]) => {
+  emit("formSubmit", {
+    ok: isOk,
+    messages: messageList,
+  });
 };
 </script>
 

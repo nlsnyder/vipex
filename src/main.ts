@@ -9,6 +9,7 @@ import { applicationIcons } from "@formkit/icons";
 import { createPinia } from "pinia";
 import { firebaseConfig } from "../firebase.config";
 import { initializeApp } from "firebase/app";
+import { VueQueryPlugin } from "vue-query";
 import withUUID from "vue-uuid";
 import "./index.css";
 
@@ -58,6 +59,7 @@ withUUID(
     .component("font-awesome-icon", FontAwesomeIcon)
     .use(router)
     .use(createPinia())
+    .use(VueQueryPlugin)
     .use(
       plugin,
       defaultConfig({
