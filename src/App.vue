@@ -10,7 +10,10 @@ import AppNav from "@/components/layout/AppNav.vue";
 import { onMounted, onUnmounted } from "vue";
 import { getAuth } from "@firebase/auth";
 import { useAuthStore } from "./stores/auth";
+import { useQueryProvider } from "vue-query";
 import router from "@/router";
+
+useQueryProvider();
 
 const store = useAuthStore();
 
