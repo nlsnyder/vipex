@@ -24,18 +24,7 @@ export class FirebaseService {
   async getExpensesForUser(
     userId: string | undefined
   ): Promise<AxiosResponse<UserExpense[]>> {
-    try {
-      const response = await this.http.get(
-        this.expensesUrl + `/${userId}.json`,
-        {}
-      );
-      if (response.status !== 200) {
-        throw new Error("An error occurred while fetching your expenses.");
-      }
-      return response.data;
-    } catch (error) {
-      throw new Error("An error occurred while fetching your expenses.");
-    }
+    return this.http.get(this.expensesUrl + `/${userId}.json`, {});
   }
 
   /**

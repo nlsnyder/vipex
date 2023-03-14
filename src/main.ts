@@ -11,6 +11,7 @@ import { firebaseConfig } from "../firebase.config";
 import { initializeApp } from "firebase/app";
 import { VueQueryPlugin } from "vue-query";
 import withUUID from "vue-uuid";
+import SyncLoader from "vue-spinner/src/SyncLoader.vue";
 import "./index.css";
 
 import {
@@ -68,4 +69,5 @@ withUUID(
         },
       })
     )
+    .component("sync-loader", SyncLoader)
 ).mount("#app");

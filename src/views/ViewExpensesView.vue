@@ -1,5 +1,36 @@
 <template>
-  <div v-if="false" class="my-12 text-center">Loading...</div>
+  <CommonModal
+    @close-modal="closeModal"
+    :show-modal="showModal"
+    :errors="modalState.errors"
+  >
+    <template #body>
+      <div class="p-4 w-4/6 m-auto text-center text-slate-600 mb-4">
+        <p>
+          {{ modalState.messages[0] }}
+        </p>
+      </div>
+    </template>
+    <template #footer-actions>
+      <div
+        class="bg-red-500 text-white font-medium justify-center gap-2 p-3 border-neutral-300 border-t flex items-center"
+      >
+        <span
+          @click="closeModal"
+          class="hover:underline hover:underline-offset-4 hover:cursor-pointer"
+          >Continue</span
+        >
+        <font-awesome-icon icon="fa-solid fa-arrow-right" />
+      </div>
+    </template>
+  </CommonModal>
+  <sync-loader
+    v-if="queryState.loading"
+    :loading="queryState.loading"
+    color="#F9A339"
+    size="15px"
+    class="center"
+  ></sync-loader>
   <div
     v-else-if="expensesExist"
     class="height-custom w-10/12 lg:w-1/2 m-auto my-12 flex flex-col"
@@ -48,20 +79,32 @@
 
 <script setup lang="ts">
 import { UserExpense } from "@/interfaces/expenses/interfaces";
-import { FirebaseService } from "@/services/FirebaseService";
-import { useAuthStore } from "@/stores/auth";
 import { getAssociatedMonth } from "@/util/enums";
-import { User, getAuth } from "@firebase/auth";
+import { getAuth, User } from "@firebase/auth";
 import { computed, onMounted, reactive } from "vue";
-const authStore = useAuthStore();
+import { FirebaseService } from "@/services/FirebaseService";
+import CommonModal from "@/components/common/CommonModal.vue";
 const firebase = new FirebaseService();
 
-const queryState = reactive<{ loading: boolean; userExpenses: UserExpense[] }>({
-  loading: false,
+interface Modal {
+  errors: boolean;
+  messages: string[];
+}
+
+const queryState = reactive<{ userExpenses: UserExpense[]; loading: boolean }>({
   userExpenses: [],
+  loading: true,
+});
+const modalState: Modal = reactive({
+  errors: false,
+  messages: [],
 });
 
 // Computed Properties
+const showModal = computed(() => {
+  return modalState.messages.length > 0;
+});
+
 const expensesExist = computed(() => {
   return queryState.userExpenses.length > 0;
 });
@@ -84,25 +127,35 @@ const getYear = (date: string) => {
   return date.split("-")[0];
 };
 
-// Component Functions
+// Component functions
+const closeModal = () => {
+  modalState.messages = [];
+  modalState.errors = false;
+};
+
 onMounted(async () => {
-  let auth: User | null;
-  if (!authStore.authState.user) {
-    auth = getAuth().currentUser;
-    authStore.setAuthState({ ...authStore.authState, user: auth });
-  } else {
-    auth = authStore.authState.user;
+  let user: User | null = null;
+  user = getAuth().currentUser;
+  if (user != null) {
+    try {
+      const response = await firebase.getExpensesForUser(user.uid);
+      if (response.status === 200) {
+        if (response.data) {
+          let expenses: UserExpense[] = [];
+          for (const [, value] of Object.entries(response.data)) {
+            expenses.push(value);
+          }
+          queryState.userExpenses = expenses;
+        }
+      }
+    } catch (error) {
+      modalState.errors = true;
+      modalState.messages.push(
+        "An error occurred when retrieving your expenses. Please try again."
+      );
+    }
   }
-  // if (response) {
-  //   if (response.status === 200) {
-  //     const data = response.data;
-  //     // Only need value object for expense, not associated id that is created with it in Firebase POST
-  //     // So we destructure the second value of array which is the value for this key on response.data
-  //     for (const [, value] of Object.entries(data)) {
-  //       userExpenses.value.push(value);
-  //     }
-  //   }
-  // }
+  queryState.loading = false;
 });
 </script>
 
@@ -156,5 +209,12 @@ hr {
   color: #333;
   border: none;
   height: 1.5px;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

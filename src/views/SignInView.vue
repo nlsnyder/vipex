@@ -39,14 +39,14 @@ const signInWithGoogle = async () => {
 
   try {
     const { user } = await signInWithPopup(getAuth(), provider);
-    window.localStorage.setItem("authenticated", "true");
-    window.localStorage.setItem("lastLogin", new Date().toLocaleString());
     // Update auth store with user credentials and logged in state
     store.setAuthState({
       isAuthenticated: true,
       user: user,
     });
     router.push("/");
+    window.localStorage.setItem("authenticated", "true");
+    window.localStorage.setItem("lastLogin", new Date().toLocaleString());
   } catch (error) {
     if (error instanceof FirebaseError) {
       errors.value.push(convertFirebaseAuthError(error.code));
