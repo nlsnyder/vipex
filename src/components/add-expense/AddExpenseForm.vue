@@ -107,6 +107,7 @@ const authStore = useAuthStore();
 
 const emit = defineEmits<{
   (e: "formSubmit", response: BaseFirebaseResponse): void;
+  (e: "updateLoading", value: boolean): void;
 }>();
 
 // Component constants
@@ -132,6 +133,7 @@ const currentDate = new Date(
 
 // Component Functions
 const submitExpense = async (fields: UserExpense) => {
+  emit("updateLoading", true);
   fields.itemId = uuid.v4();
 
   // Confirm we currently have a signed in user, if not, try to get valid auth from Firebase
@@ -155,8 +157,10 @@ const submitExpense = async (fields: UserExpense) => {
         "Something went wrong while adding you expense...please try again.",
       ]);
     }
+    emit("updateLoading", false);
   } catch (error) {
     emitFormSubmit(false, ["An error occurred while adding your expense."]);
+    emit("updateLoading", false);
   }
 };
 

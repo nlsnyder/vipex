@@ -25,6 +25,7 @@ import {
   faX,
   faArrowRight,
   faQuestion,
+  faEllipsisVertical,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTwitter,
@@ -49,7 +50,8 @@ library.add(
   faCheck,
   faX,
   faArrowRight,
-  faQuestion
+  faQuestion,
+  faEllipsisVertical
 );
 
 //initialize firebase app

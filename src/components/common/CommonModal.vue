@@ -34,7 +34,7 @@ defineProps<{
 }>();
 </script>
 
-<style scoped>
+<style>
 .overlay {
   z-index: 50;
   width: 100%;
