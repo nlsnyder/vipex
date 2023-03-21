@@ -95,7 +95,6 @@
 <script setup lang="ts">
 import { UserExpense } from "@/interfaces/expenses/interfaces";
 import { FormKit } from "@formkit/vue";
-import { uuid } from "vue-uuid";
 import { BaseFirebaseResponse } from "@/interfaces/expenses/interfaces";
 import { FirebaseService } from "@/services/FirebaseService";
 import { useAuthStore } from "@/stores/auth";
@@ -134,7 +133,6 @@ const currentDate = new Date(
 // Component Functions
 const submitExpense = async (fields: UserExpense) => {
   emit("updateLoading", true);
-  fields.itemId = uuid.v4();
 
   // Confirm we currently have a signed in user, if not, try to get valid auth from Firebase
   let auth: User | null;

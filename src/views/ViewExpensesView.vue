@@ -33,7 +33,7 @@
   ></sync-loader>
   <div
     v-else-if="expensesExist"
-    class="height-custom w-10/12 lg:w-1/2 m-auto my-12 flex flex-col"
+    class="height-custom w-11/12 lg:w-1/2 m-auto my-12 flex flex-col"
   >
     <h2 class="mb-10 text-3xl text-center">Expenses</h2>
     <div class="background p-3 md:p-10 rounded-lg shadow-lg">
@@ -147,7 +147,8 @@ onMounted(async () => {
       if (response.status === 200) {
         if (response.data) {
           let expenses: UserExpense[] = [];
-          for (const [, value] of Object.entries(response.data)) {
+          for (const [key, value] of Object.entries(response.data)) {
+            value.itemId = key;
             expenses.push(value);
           }
           queryState.userExpenses = expenses;

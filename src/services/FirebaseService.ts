@@ -46,4 +46,22 @@ export class FirebaseService {
       config
     );
   }
+
+  /**
+   * Get data for expense id
+   * @param userId - user auth id
+   * @param expenseId - expense id
+   * @param config - config options
+   * @returns expense with given id
+   */
+  getExpenseById(
+    userId: string | undefined,
+    expenseId: string,
+    config: AxiosRequestConfig
+  ): Promise<AxiosResponse<UserExpense>> {
+    return this.http.get<UserExpense>(
+      this.expensesUrl + `/${userId}/${expenseId}`,
+      config
+    );
+  }
 }
