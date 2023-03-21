@@ -41,25 +41,30 @@
         <li
           v-for="expense in queryState.userExpenses"
           :key="expense.itemId"
-          class="flex items-baseline gap-x-4 py-3 pl-3 pr-5 background-light rounded-lg shadow"
+          class="flex items-stretch gap-x-4 background-light rounded-lg shadow overflow-hidden"
         >
-          <div
-            class="flex flex-col bg-white shadow-inner py-3 px-5 gap rounded-lg items-center"
-          >
+          <div class="bg-white flex flex-col justify-between gap-y-0.5">
             <span
-              >{{ getMonth(expense.datePurchased) }}
-              {{ getDay(expense.datePurchased) }}</span
+              class="uppercase text-center text-slate-500 font-medium tracking-wider text-sm pt-2"
+              >{{ getMonth(expense.datePurchased) }}</span
             >
-            <span>{{ getYear(expense.datePurchased) }}</span>
+            <span class="text-center black font-bold text-xl">{{
+              getDay(expense.datePurchased)
+            }}</span>
+            <span
+              class="text-center text-slate-500 bg-slate-100 text-sm font-medium px-4 py-px tracking-wider"
+            >
+              {{ getYear(expense.datePurchased) }}</span
+            >
           </div>
-          <div class="grow">
+          <div class="flex-auto py-3">
             <p class="mb-1 text-xl font-medium">{{ expense.retailerName }}</p>
             <hr />
             <p class="mt-1 text-sm italic text-zinc-600">
               {{ expense.itemDescription }}
             </p>
           </div>
-          <span class="text-xl self-center">{{
+          <span class="text-xl self-center pr-5 py-3">{{
             formattedPrice(expense.cost)
           }}</span>
         </li>

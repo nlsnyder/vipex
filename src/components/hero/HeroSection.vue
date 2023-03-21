@@ -6,7 +6,7 @@
         spending with Vipex
       </h1>
       <div class="hero-buttons">
-        <button class="btn cta">
+        <button class="btn cta rounded">
           <router-link to="/add-expense">Try It Now</router-link>
         </button>
       </div>
@@ -46,7 +46,7 @@
   gap: 40px;
   text-align: center;
   line-height: 1.15;
-  z-index: 50;
+  z-index: 2;
   border-radius: 10px;
   padding: 25px;
   box-shadow: 0px 0px 10px #333;
@@ -94,7 +94,6 @@
 
 .btn {
   padding: 8px 15px;
-  border-radius: 20px;
   transition: all 0.2s;
   font-size: 1.1rem;
 }
