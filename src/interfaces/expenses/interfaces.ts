@@ -1,3 +1,7 @@
+export interface FirebaseExpense {
+  firebaseId: UserExpense;
+}
+
 export interface UserExpense {
   itemId: string;
   datePurchased: string;

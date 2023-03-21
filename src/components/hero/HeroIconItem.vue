@@ -1,7 +1,7 @@
 <template>
   <div class="icon-items">
     <font-awesome-icon class="icon" :icon="iconComputedName" />
-    <p class="description">
+    <p class="description w-4/5 text-center lg:w-full">
       {{ iconDescription }}
     </p>
   </div>
@@ -37,7 +37,8 @@ const iconComputedName = computed(() => {
 }
 
 .description {
-  line-height: 1.7;
-  font-weight: 500;
+  line-height: 1.6;
+  font-weight: 400;
+  margin: 0 auto;
 }
 </style>

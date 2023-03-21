@@ -1,6 +1,8 @@
 <template>
   <div class="background">
-    <div class="grid-icons">
+    <div
+      class="grid-icons grid gap-x-12 gap-y-16 m-auto grid-cols-1 grid-rows-4 sm:grid-rows-2 sm:grid-cols-2 lg:grid-rows-1 lg:grid-cols-4"
+    >
       <HeroIconItem
         v-for="(icon, index) in icons"
         :key="index"
@@ -41,16 +43,10 @@ const icons = ref([
 
 <style scoped>
 .background {
-  background-color: #f7f5fb;
   padding-bottom: 40px;
 }
 
 .grid-icons {
   width: 80%;
-  margin: 0 auto;
-  display: grid;
-  column-gap: 4.8rem;
-  row-gap: 6.4rem;
-  grid-template-columns: repeat(4, 1fr);
 }
 </style>

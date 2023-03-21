@@ -133,11 +133,11 @@ const registerEmailAndPassword = async ({
       password
     );
     formState.loading = false;
-    // save auth state in local storage and state
     window.localStorage.setItem("authenticated", "true");
     window.localStorage.setItem("lastLogin", new Date().toLocaleString());
-    store.setAuthState({ isAuthenticated: true, user });
     router.push("/");
+    // save auth state in local storage and state
+    store.setAuthState({ isAuthenticated: true, user });
   } catch (error: unknown) {
     formState.loading = false;
     if (error instanceof FirebaseError) {
