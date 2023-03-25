@@ -1,10 +1,10 @@
 <template>
-  <MobileNav
-    @close-mobile-nav="toggleMobileNav"
-    @sign-user-out="signUserOut"
-    :mobile-open="mobileNavState.openMobileNav"
-  />
   <header class="navigation">
+    <MobileNav
+      @close-mobile-nav="toggleMobileNav"
+      @sign-user-out="signUserOut"
+      :mobile-open="mobileNavState.openMobileNav"
+    />
     <nav>
       <div @click="closeMobileNav" class="app-logo-name">
         <router-link to="/"

@@ -1,10 +1,13 @@
 <template>
-  <div v-if="props.mobileOpen">
+  <Transition name="fade" appear>
     <div
+      v-if="props.mobileOpen"
       @click="$emit('closeMobileNav')"
-      class="mobile-overlay md:hidden animate-fade"
+      class="mobile-overlay md:hidden"
     ></div>
-    <nav class="mobile md:hidden animate-left">
+  </Transition>
+  <Transition name="fade-left" appear>
+    <nav v-if="props.mobileOpen" class="mobile md:hidden">
       <ul class="px-5">
         <li @click="$emit('closeMobileNav')" class="text-lg font-semibold py-6">
           <router-link to="/add-expense">Add Expense</router-link>
@@ -22,7 +25,7 @@
         </button>
       </ul>
     </nav>
-  </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
@@ -56,34 +59,24 @@ hr {
   height: 1.5px;
 }
 
-.animate-left {
-  animation-name: open-left;
-  animation-duration: 0.2s;
-  animation-iteration-count: 1;
+.fade-left-enter-from,
+.fade-left-leave-to {
+  opacity: 0;
+  transform: translateX(-100%);
 }
 
-.animate-fade {
-  animation-name: fadein;
-  animation-duration: 0.2s;
-  animation-iteration-count: 1;
+.fade-left-enter-active,
+.fade-left-leave-active {
+  transition: all 0.3s ease-in-out;
 }
 
-@keyframes open-left {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s linear;
 }
-@keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

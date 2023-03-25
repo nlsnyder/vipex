@@ -1,4 +1,5 @@
 <template>
+  <div id="modal"></div>
   <AppNav v-if="store.authState.isAuthenticated" />
   <main>
     <router-view />

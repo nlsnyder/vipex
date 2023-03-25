@@ -1,33 +1,43 @@
 <template>
-  <div v-if="showModal">
-    <div @click="$emit('closeModal')" class="overlay"></div>
-    <div class="modal rounded overflow-hidden">
-      <header class="pt-6 flex flex-col items-center gap-3 text-2xl">
-        <font-awesome-icon
-          class="text-white p-2 rounded-full w-7 h-7"
-          :class="{ 'bg-green-400': !errors, 'bg-red-500': errors }"
-          :icon="`fa-solid ${errors ? 'fa-question' : 'fa-check'}`"
-        />
-        <h2
-          class="grow uppercase font-medium tracking-wide"
-          :class="{ 'text-green-400': !errors, 'text-red-500': errors }"
-        >
-          {{ errors ? "Error" : "Success" }}
-        </h2>
-        <font-awesome-icon
-          @click="$emit('closeModal')"
-          class="text-lg hover:cursor-pointer absolute top-3 right-3"
-          icon="fa-solid fa-x"
-        />
-      </header>
+  <Teleport to="#modal">
+    <Transition name="fade" appear>
+      <div v-if="showModal" @click="emit('closeModal')" class="overlay"></div>
+    </Transition>
+    <Transition name="pop-slide" appear>
+      <div v-if="showModal">
+        <div class="modal rounded overflow-hidden">
+          <header class="pt-6 flex flex-col items-center gap-3 text-2xl">
+            <font-awesome-icon
+              class="text-white p-2 rounded-full w-7 h-7"
+              :class="{ 'bg-green-400': !errors, 'bg-red-500': errors }"
+              :icon="`fa-solid ${errors ? 'fa-question' : 'fa-check'}`"
+            />
+            <h2
+              class="grow uppercase font-medium tracking-wide"
+              :class="{ 'text-green-400': !errors, 'text-red-500': errors }"
+            >
+              {{ errors ? "Error" : "Success" }}
+            </h2>
+            <font-awesome-icon
+              @click="$emit('closeModal')"
+              class="text-lg hover:cursor-pointer absolute top-3 right-3"
+              icon="fa-solid fa-x"
+            />
+          </header>
 
-      <slot name="body"></slot>
-      <slot name="footer-actions"></slot>
-    </div>
-  </div>
+          <slot name="body"></slot>
+          <slot name="footer-actions"></slot>
+        </div>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
+const emit = defineEmits<{
+  (e: "closeModal"): void;
+}>();
+
 defineProps<{
   showModal: boolean;
   errors: boolean;
@@ -50,24 +60,8 @@ defineProps<{
   background-color: #f7f5fb;
   position: absolute;
   width: 90%;
-  top: 25%;
+  top: 150px;
   left: 5%;
-  animation-name: slidedown;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-in-out;
-}
-
-@keyframes slidedown {
-  from {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 
 @media (min-width: 768px) {
@@ -82,5 +76,33 @@ defineProps<{
     width: 50%;
     left: 25%;
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s linear;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.pop-slide-enter-from {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+.pop-slide-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.pop-slide-leave-active {
+  transition: transform 0.3s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.3s linear;
+}
+
+.pop-slide-leave-to {
+  opacity: 0;
+  transform: scale(0.3) translateY(-50%);
 }
 </style>
