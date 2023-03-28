@@ -68,4 +68,8 @@ html {
   color: #444;
   font-family: "Rubik", sans-serif;
 }
+
+.background-main {
+  background-color: #f9a339;
+}
 </style>

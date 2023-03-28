@@ -2,23 +2,23 @@
   <Transition name="fade" appear>
     <div
       v-if="props.mobileOpen"
-      @click="$emit('closeMobileNav')"
+      @click="emit('closeMobileNav')"
       class="mobile-overlay md:hidden"
     ></div>
   </Transition>
   <Transition name="fade-left" appear>
     <nav v-if="props.mobileOpen" class="mobile md:hidden">
       <ul class="px-5">
-        <li @click="$emit('closeMobileNav')" class="text-lg font-semibold py-6">
+        <li @click="emit('closeMobileNav')" class="text-lg font-semibold py-6">
           <router-link to="/add-expense">Add Expense</router-link>
         </li>
         <hr />
-        <li @click="$emit('closeMobileNav')" class="text-lg font-semibold py-6">
+        <li @click="emit('closeMobileNav')" class="text-lg font-semibold py-6">
           <router-link to="/view-expenses">View Expenses</router-link>
         </li>
         <hr />
         <button
-          @click="$emit('signUserOut', true)"
+          @click="emit('signUserOut', true)"
           class="text-lg font-semibold py-6"
         >
           Sign out
@@ -30,11 +30,15 @@
 
 <script setup lang="ts">
 const props = defineProps<{ mobileOpen: boolean }>();
+const emit = defineEmits<{
+  (e: "closeMobileNav"): void;
+  (e: "signUserOut", toggleNav: boolean): void;
+}>();
 </script>
 
 <style scoped>
 .mobile-overlay {
-  position: absolute;
+  position: fixed;
   top: 10vh;
   height: 90vh;
   width: 100%;
@@ -43,7 +47,7 @@ const props = defineProps<{ mobileOpen: boolean }>();
 }
 
 .mobile {
-  position: absolute;
+  position: fixed;
   top: 10vh;
   left: 0;
   height: 90vh;

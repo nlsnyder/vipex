@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-4xl mb-3">You do not have any expenses!</h1>
+  <h1 class="text-4xl text-center mb-3">You do not have any expenses!</h1>
   <button
     class="p-2 flex gap-2 items-center justify-center addButton border rounded-md border-black"
   >

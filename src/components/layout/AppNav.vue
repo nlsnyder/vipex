@@ -82,6 +82,10 @@ const closeMobileNav = () => {
 .navigation {
   background-color: #f9a339;
   height: 10vh;
+  /* position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; */
 }
 
 nav {
