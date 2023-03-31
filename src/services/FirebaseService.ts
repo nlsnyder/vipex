@@ -64,4 +64,23 @@ export class FirebaseService {
       config
     );
   }
+
+  /**
+   * Edits an expense with given expense id
+   * @param userId
+   * @param expenseId
+   * @param config
+   */
+  editExpenseById(
+    userId: string | undefined,
+    expenseId: string,
+    expense: UserExpense,
+    config: AxiosRequestConfig
+  ): Promise<AxiosResponse<any>> {
+    return this.http.put<UserExpense>(
+      this.expensesUrl + `/${userId}/${expenseId}.json`,
+      expense,
+      config
+    );
+  }
 }

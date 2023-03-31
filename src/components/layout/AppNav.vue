@@ -10,7 +10,7 @@
         <router-link to="/"
           ><img src="@/assets/logo.svg" alt="Vuetify filler logo" width="50"
         /></router-link>
-        <h1>Company Title</h1>
+        <h1>Vipex</h1>
       </div>
       <ul class="hidden md:inline-flex">
         <li><router-link to="/add-expense">Add Expense</router-link></li>

@@ -85,10 +85,25 @@
 
 <script setup lang="ts">
 import { UserExpense } from "@/interfaces/expenses/interfaces";
+import { useAuthStore } from "@/stores/auth";
+import { getAuth, User } from "@firebase/auth";
 import { FormKit } from "@formkit/vue";
+import { reactive } from "vue";
+import { FirebaseService } from "@/services/FirebaseService";
+
+const authStore = useAuthStore();
+const firebase = new FirebaseService();
+
+const editFormState = reactive<{
+  errors: string[];
+}>({ errors: [] });
 
 const props = defineProps<{
   expense: UserExpense | undefined;
+}>();
+
+const emit = defineEmits<{
+  (e: "setLoading"): void;
 }>();
 
 // constants
@@ -109,8 +124,31 @@ const currentDate = new Date(
   `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
 );
 
-const handleEditExpense = (formFields: UserExpense) => {
-  console.log(formFields);
+const handleEditExpense = async (formFields: UserExpense) => {
+  emit("setLoading");
+  const { itemId, ...expense } = formFields;
+
+  try {
+    let user: User | null = null;
+    if (!authStore.authState.user) {
+      user = getAuth().currentUser;
+    } else {
+      user = authStore.authState.user;
+    }
+
+    const response = await firebase.editExpenseById(
+      user?.uid,
+      itemId,
+      expense as UserExpense,
+      {}
+    );
+    console.log(response);
+  } catch (err) {
+    console.log(err);
+    editFormState.errors.push("Error occurred");
+  }
+
+  emit("setLoading");
 };
 </script>
 

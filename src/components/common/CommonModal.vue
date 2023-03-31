@@ -1,27 +1,32 @@
 <template>
   <Teleport to="#modal">
-    <Transition name="fade" appear>
-      <div v-if="showModal" @click="emit('closeModal')" class="overlay"></div>
-    </Transition>
-    <Transition name="pop-slide" appear>
+    <Transition name="pop" appear>
       <div v-if="showModal">
-        <div class="modal rounded overflow-hidden">
-          <ModalHeader
-            v-if="props.type !== ModalType.CUSTOM"
-            :type="props.type"
-            @close-modal="emit('closeModal')"
-          />
+        <div class="overlay">
+          <Transition name="pop-slide" appear>
+            <div v-if="showModal">
+              <div class="modal rounded overflow-hidden">
+                <ModalHeader
+                  v-if="props.type !== ModalType.CUSTOM"
+                  :type="props.type"
+                  @close-modal="emit('closeModal')"
+                />
 
-          <header v-else class="py-3 px-5 background-main">
-            <h2 class="text-2xl font-medium">{{ props.heading ?? "Modal" }}</h2>
-            <font-awesome-icon
-              @click="emit('closeModal')"
-              class="text-lg hover:cursor-pointer absolute top-5 right-4"
-              icon="fa-solid fa-x"
-            />
-          </header>
-          <slot name="body"></slot>
-          <slot name="footer-actions"></slot>
+                <header v-else class="py-3 px-5 background-main">
+                  <h2 class="text-2xl font-medium">
+                    {{ props.heading ?? "Modal" }}
+                  </h2>
+                  <font-awesome-icon
+                    @click="emit('closeModal')"
+                    class="text-lg hover:cursor-pointer absolute top-5 right-4"
+                    icon="fa-solid fa-x"
+                  />
+                </header>
+                <slot name="body"></slot>
+                <slot name="footer-actions"></slot>
+              </div>
+            </div>
+          </Transition>
         </div>
       </div>
     </Transition>
@@ -59,7 +64,7 @@ const props = defineProps<CommonModalProps>();
 .modal {
   z-index: 999;
   background-color: #f7f5fb;
-  position: fixed;
+  position: relative;
   width: 90%;
   top: 80px;
   left: 5%;
@@ -79,22 +84,8 @@ const props = defineProps<CommonModalProps>();
   }
 }
 
-.fade-enter-active {
-  transition: opacity 0.7s linear;
-}
-
-.fade-leave-active {
-  transition: opacity 0.3s linear;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 .pop-slide-enter-from {
-  -webkit-transform: translate3d(0, -3rem, 0);
-  transform: translate3d(0, -3rem, 0);
+  transform: translateY(-3rem);
   opacity: 0;
 }
 
@@ -102,21 +93,17 @@ const props = defineProps<CommonModalProps>();
   transition: all 0.3s ease-out;
 }
 
-.pop-slider-enter-to {
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
+.pop-slide-enter-to {
+  transform: translateY(0);
   opacity: 1;
 }
 
-.pop-slide-leave-active {
-  -webkit-transform: transform 0.3s cubic-bezier(0.5, 0, 0.5, 1),
-    opacity 0.3s linear;
-  transform: transform 0.3s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.3s linear;
+.pop-leave-active {
+  transition: transform 0.4s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.4s linear;
 }
 
-.pop-slide-leave-to {
+.pop-leave-to {
   opacity: 0;
-  -webkit-transform: scale3d(0.3, 0.3, 0.3) translate3d(0, -50%, 0);
-  transform: scale3d(0.3, 0.3, 0.3) translate3d(0, -50%, 0);
+  transform: scale(0.3) translateY(-50%);
 }
 </style>

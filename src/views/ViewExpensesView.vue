@@ -2,7 +2,6 @@
   <CommonModal
     @close-modal="closeModal"
     :show-modal="showModal"
-    :errors="modalState.errors"
     :type="modalState.errors ? ModalType.ERROR : ModalType.SUCCESS"
   >
     <template #body>

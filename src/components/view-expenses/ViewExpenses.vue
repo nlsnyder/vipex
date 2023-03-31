@@ -6,8 +6,11 @@
     heading="Edit Expense"
   >
     <template #body>
-      <div class="w-3/4 m-auto py-3">
-        <EditExpenseForm :expense="editState.expense" />
+      <div class="w-3/4 m-auto py-5">
+        <EditExpenseForm
+          :expense="editState.expense"
+          @set-loading="toggleLoading"
+        />
       </div>
     </template>
     <template #footer-actions>
@@ -16,9 +19,15 @@
       >
         <button
           @click="$formkit.submit('editExpense')"
-          class="p-2 background-light rounded"
+          class="p-2 background-light rounded w-20 flex justify-center"
         >
-          Confirm
+          <img
+            v-if="editState.formSubmitting"
+            src="../../assets/loader-icon.webp"
+            class="animate-spin h-6 w-6"
+            alt="spinner"
+          />
+          <span v-else>Confirm</span>
         </button>
         <button
           @click="toggleEditForm"
@@ -85,9 +94,11 @@ const props = defineProps<ViewExpensesProps>();
 
 const editState = reactive<{
   editExpense: boolean;
+  formSubmitting: boolean;
   expense: UserExpense | undefined;
 }>({
   editExpense: false,
+  formSubmitting: false,
   expense: undefined,
 });
 
@@ -114,6 +125,10 @@ const toggleEditForm = (event?: MouseEvent, userExpense?: UserExpense) => {
   if (userExpense) {
     editState.expense = userExpense;
   }
+};
+
+const toggleLoading = () => {
+  editState.formSubmitting = !editState.formSubmitting;
 };
 </script>
 
