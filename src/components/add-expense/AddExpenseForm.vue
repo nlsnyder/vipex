@@ -100,9 +100,11 @@ import { FirebaseService } from "@/services/FirebaseService";
 import { useAuthStore } from "@/stores/auth";
 import { getAuth, User } from "firebase/auth";
 import { AxiosResponse } from "axios";
+import { useExpensesStore } from "@/stores/expenses";
 
 const firebase = new FirebaseService();
 const authStore = useAuthStore();
+const expenseStore = useExpensesStore();
 
 const emit = defineEmits<{
   (e: "formSubmit", response: BaseFirebaseResponse): void;
@@ -150,6 +152,9 @@ const submitExpense = async (fields: UserExpense) => {
       });
     if (response != null && response.status === 200) {
       emitFormSubmit(true, ["Your expense has been added!"]);
+      expenseStore.$patch((state) => {
+        state.expenses.push(fields);
+      });
     } else {
       emitFormSubmit(false, [
         "Something went wrong while adding you expense...please try again.",

@@ -47,8 +47,10 @@ import CommonLoader from "@/components/common/CommonLoader.vue";
 import NoExpenses from "@/components/view-expenses/NoExpenses.vue";
 import ViewExpenses from "@/components/view-expenses/ViewExpenses.vue";
 import { ModalType } from "@/util/enums";
+import { useExpensesStore } from "@/stores/expenses";
 
 const firebase = new FirebaseService();
+const expenseStore = useExpensesStore();
 
 interface Modal {
   errors: boolean;
@@ -57,9 +59,9 @@ interface Modal {
 
 const queryState = reactive<{ userExpenses: UserExpense[]; loading: boolean }>({
   userExpenses: [],
-  loading: true,
+  loading: false,
 });
-const modalState: Modal = reactive({
+const modalState = reactive<Modal>({
   errors: false,
   messages: [],
 });
@@ -79,7 +81,26 @@ const closeModal = () => {
   modalState.errors = false;
 };
 
-onMounted(async () => {
+// Subscribe to whenever the expenses state changes due to edit
+// or deletion of expense
+expenseStore.$subscribe(
+  (_mutation, state) => {
+    queryState.userExpenses = state.expenses;
+  },
+  { detached: true }
+);
+
+onMounted(() => {
+  fetchUserExpenses();
+});
+
+const fetchUserExpenses = async () => {
+  queryState.loading = true;
+  if (expenseStore.expenses.length > 0) {
+    queryState.userExpenses = expenseStore.expenses;
+    queryState.loading = false;
+    return;
+  }
   let user: User | null = null;
   user = getAuth().currentUser;
   if (user != null) {
@@ -87,12 +108,15 @@ onMounted(async () => {
       const response = await firebase.getExpensesForUser(user.uid);
       if (response.status === 200) {
         if (response.data) {
-          let expenses: UserExpense[] = [];
+          let loadedExpenses: UserExpense[] = [];
           for (const [key, value] of Object.entries(response.data)) {
             value.itemId = key;
-            expenses.push(value);
+            loadedExpenses.push(value);
           }
-          queryState.userExpenses = expenses;
+          queryState.userExpenses = loadedExpenses;
+          expenseStore.$patch({
+            expenses: loadedExpenses,
+          });
         }
       }
     } catch (error) {
@@ -103,5 +127,5 @@ onMounted(async () => {
     }
   }
   queryState.loading = false;
-});
+};
 </script>

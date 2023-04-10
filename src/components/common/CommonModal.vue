@@ -1,35 +1,33 @@
 <template>
   <Teleport to="#modal">
-    <Transition name="pop" appear>
-      <div v-if="showModal">
-        <div class="overlay">
-          <Transition name="pop-slide" appear>
-            <div v-if="showModal">
-              <div class="modal rounded overflow-hidden">
-                <ModalHeader
-                  v-if="props.type !== ModalType.CUSTOM"
-                  :type="props.type"
-                  @close-modal="emit('closeModal')"
-                />
+    <div v-if="showModal">
+      <div class="overlay">
+        <Transition name="pop-slide" appear>
+          <div v-if="showModal">
+            <div class="modal rounded overflow-hidden">
+              <ModalHeader
+                v-if="props.type !== ModalType.CUSTOM"
+                :type="props.type"
+                @close-modal="emit('closeModal')"
+              />
 
-                <header v-else class="py-3 px-5 background-main">
-                  <h2 class="text-2xl font-medium">
-                    {{ props.heading ?? "Modal" }}
-                  </h2>
-                  <font-awesome-icon
-                    @click="emit('closeModal')"
-                    class="text-lg hover:cursor-pointer absolute top-5 right-4"
-                    icon="fa-solid fa-x"
-                  />
-                </header>
-                <slot name="body"></slot>
-                <slot name="footer-actions"></slot>
-              </div>
+              <header v-else class="py-3 px-5 background-main">
+                <h2 class="text-2xl font-medium">
+                  {{ props.heading ?? "Modal" }}
+                </h2>
+                <font-awesome-icon
+                  @click="emit('closeModal')"
+                  class="text-lg hover:cursor-pointer absolute top-5 right-4"
+                  icon="fa-solid fa-x"
+                />
+              </header>
+              <slot name="body"></slot>
+              <slot name="footer-actions"></slot>
             </div>
-          </Transition>
-        </div>
+          </div>
+        </Transition>
       </div>
-    </Transition>
+    </div>
   </Teleport>
 </template>
 

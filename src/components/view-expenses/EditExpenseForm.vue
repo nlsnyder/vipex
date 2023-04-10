@@ -90,8 +90,10 @@ import { getAuth, User } from "@firebase/auth";
 import { FormKit } from "@formkit/vue";
 import { reactive } from "vue";
 import { FirebaseService } from "@/services/FirebaseService";
+import { useExpensesStore } from "@/stores/expenses";
 
 const authStore = useAuthStore();
+const expenseStore = useExpensesStore();
 const firebase = new FirebaseService();
 
 const editFormState = reactive<{
@@ -104,6 +106,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: "setLoading"): void;
+  (e: "closeModal"): void;
 }>();
 
 // constants
@@ -132,6 +135,7 @@ const handleEditExpense = async (formFields: UserExpense) => {
     let user: User | null = null;
     if (!authStore.authState.user) {
       user = getAuth().currentUser;
+      authStore.setAuthState({ ...authStore.authState, user });
     } else {
       user = authStore.authState.user;
     }
@@ -143,12 +147,19 @@ const handleEditExpense = async (formFields: UserExpense) => {
       {}
     );
     console.log(response);
+    let filteredExpenses = expenseStore.expenses.filter(
+      (expense) => expense.itemId !== itemId
+    );
+    filteredExpenses.push(formFields);
+    expenseStore.$patch({
+      expenses: filteredExpenses,
+    });
   } catch (err) {
     console.log(err);
     editFormState.errors.push("Error occurred");
   }
-
   emit("setLoading");
+  emit("closeModal");
 };
 </script>
 
