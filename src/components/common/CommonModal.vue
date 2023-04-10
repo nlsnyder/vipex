@@ -1,73 +1,71 @@
 <template>
-  <div v-if="showModal">
-    <div @click="$emit('closeModal')" class="overlay"></div>
-    <div class="modal rounded overflow-hidden">
-      <header class="pt-6 flex flex-col items-center gap-3 text-2xl">
-        <font-awesome-icon
-          class="text-white p-2 rounded-full w-7 h-7"
-          :class="{ 'bg-green-400': !errors, 'bg-red-500': errors }"
-          :icon="`fa-solid ${errors ? 'fa-question' : 'fa-check'}`"
-        />
-        <h2
-          class="grow uppercase font-medium tracking-wide"
-          :class="{ 'text-green-400': !errors, 'text-red-500': errors }"
-        >
-          {{ errors ? "Error" : "Success" }}
-        </h2>
-        <font-awesome-icon
-          @click="$emit('closeModal')"
-          class="text-lg hover:cursor-pointer absolute top-3 right-3"
-          icon="fa-solid fa-x"
-        />
-      </header>
+  <Teleport to="#modal">
+    <div v-if="showModal">
+      <div class="overlay">
+        <Transition name="pop-slide" appear>
+          <div v-if="showModal">
+            <div class="modal rounded overflow-hidden">
+              <ModalHeader
+                v-if="props.type !== ModalType.CUSTOM"
+                :type="props.type"
+                @close-modal="emit('closeModal')"
+              />
 
-      <slot name="body"></slot>
-      <slot name="footer-actions"></slot>
+              <header v-else class="py-3 px-5 background-main">
+                <h2 class="text-2xl font-medium">
+                  {{ props.heading ?? "Modal" }}
+                </h2>
+                <font-awesome-icon
+                  @click="emit('closeModal')"
+                  class="text-lg hover:cursor-pointer absolute top-5 right-4"
+                  icon="fa-solid fa-x"
+                />
+              </header>
+              <slot name="body"></slot>
+              <slot name="footer-actions"></slot>
+            </div>
+          </div>
+        </Transition>
+      </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import ModalHeader from "@/components/common/ModalHeader.vue";
+import { ModalType } from "@/util/enums";
+
+interface CommonModalProps {
+  type: ModalType;
+  heading?: string;
   showModal: boolean;
-  errors: boolean;
+}
+
+const emit = defineEmits<{
+  (e: "closeModal"): void;
 }>();
+
+const props = defineProps<CommonModalProps>();
 </script>
 
 <style>
 .overlay {
   z-index: 50;
   width: 100%;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  position: absolute;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  position: fixed;
   background: rgba(0, 0, 0, 0.4);
 }
 
 .modal {
   z-index: 999;
   background-color: #f7f5fb;
-  position: absolute;
+  position: relative;
   width: 90%;
-  top: 25%;
+  top: 80px;
   left: 5%;
-  animation-name: slidedown;
-  animation-duration: 0.3s;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-in-out;
-}
-
-@keyframes slidedown {
-  from {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 
 @media (min-width: 768px) {
@@ -79,8 +77,31 @@ defineProps<{
 
 @media (min-width: 992px) {
   .modal {
-    width: 50%;
-    left: 25%;
+    width: 40%;
+    left: 30%;
   }
+}
+
+.pop-slide-enter-from {
+  transform: translateY(-3rem);
+  opacity: 0;
+}
+
+.pop-slide-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.pop-slide-enter-to {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.pop-leave-active {
+  transition: transform 0.4s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.4s linear;
+}
+
+.pop-leave-to {
+  opacity: 0;
+  transform: scale(0.3) translateY(-50%);
 }
 </style>

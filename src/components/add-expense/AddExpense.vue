@@ -1,16 +1,9 @@
 <template>
-  <div v-if="modalState.loading" class="overlay"></div>
-  <sync-loader
-    v-if="modalState.loading"
-    :loading="modalState.loading"
-    color="#F9A339"
-    size="15px"
-    class="center"
-  ></sync-loader>
+  <CommonLoader v-if="modalState.loading" :loading="modalState.loading" />
   <CommonModal
     @close-modal="closeModal"
     :show-modal="modalState.show"
-    :errors="modalState.errors"
+    :type="modalState.errors ? ModalType.ERROR : ModalType.SUCCESS"
   >
     <template #body>
       <div class="p-4 w-4/6 m-auto text-center text-slate-600 mb-4">
@@ -65,7 +58,9 @@
 <script setup lang="ts">
 import AddExpenseForm from "@/components/add-expense/AddExpenseForm.vue";
 import CommonModal from "@/components/common/CommonModal.vue";
+import CommonLoader from "@/components/common/CommonLoader.vue";
 import { BaseFirebaseResponse } from "@/interfaces/expenses/interfaces";
+import { ModalType } from "@/util/enums";
 import { reactive } from "vue";
 
 interface Modal {

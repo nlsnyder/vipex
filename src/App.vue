@@ -1,4 +1,5 @@
 <template>
+  <div id="modal"></div>
   <AppNav v-if="store.authState.isAuthenticated" />
   <main>
     <router-view />
@@ -66,5 +67,9 @@ body,
 html {
   color: #444;
   font-family: "Rubik", sans-serif;
+}
+
+.background-main {
+  background-color: #f9a339;
 }
 </style>

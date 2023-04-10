@@ -28,3 +28,9 @@ export const getAssociatedMonth = (month: number) => {
       return "Jan";
   }
 };
+
+export enum ModalType {
+  SUCCESS,
+  ERROR,
+  CUSTOM,
+}

@@ -1,37 +1,44 @@
 <template>
-  <div v-if="props.mobileOpen">
+  <Transition name="fade" appear>
     <div
-      @click="$emit('closeMobileNav')"
-      class="mobile-overlay md:hidden animate-fade"
+      v-if="props.mobileOpen"
+      @click="emit('closeMobileNav')"
+      class="mobile-overlay md:hidden"
     ></div>
-    <nav class="mobile md:hidden animate-left">
+  </Transition>
+  <Transition name="fade-left" appear>
+    <nav v-if="props.mobileOpen" class="mobile md:hidden">
       <ul class="px-5">
-        <li @click="$emit('closeMobileNav')" class="text-lg font-semibold py-6">
+        <li @click="emit('closeMobileNav')" class="text-lg font-semibold py-6">
           <router-link to="/add-expense">Add Expense</router-link>
         </li>
         <hr />
-        <li @click="$emit('closeMobileNav')" class="text-lg font-semibold py-6">
+        <li @click="emit('closeMobileNav')" class="text-lg font-semibold py-6">
           <router-link to="/view-expenses">View Expenses</router-link>
         </li>
         <hr />
         <button
-          @click="$emit('signUserOut', true)"
+          @click="emit('signUserOut', true)"
           class="text-lg font-semibold py-6"
         >
           Sign out
         </button>
       </ul>
     </nav>
-  </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{ mobileOpen: boolean }>();
+const emit = defineEmits<{
+  (e: "closeMobileNav"): void;
+  (e: "signUserOut", toggleNav: boolean): void;
+}>();
 </script>
 
 <style scoped>
 .mobile-overlay {
-  position: absolute;
+  position: fixed;
   top: 10vh;
   height: 90vh;
   width: 100%;
@@ -40,7 +47,7 @@ const props = defineProps<{ mobileOpen: boolean }>();
 }
 
 .mobile {
-  position: absolute;
+  position: fixed;
   top: 10vh;
   left: 0;
   height: 90vh;
@@ -56,34 +63,24 @@ hr {
   height: 1.5px;
 }
 
-.animate-left {
-  animation-name: open-left;
-  animation-duration: 0.2s;
-  animation-iteration-count: 1;
+.fade-left-enter-from,
+.fade-left-leave-to {
+  opacity: 0;
+  transform: translateX(-100%);
 }
 
-.animate-fade {
-  animation-name: fadein;
-  animation-duration: 0.2s;
-  animation-iteration-count: 1;
+.fade-left-enter-active,
+.fade-left-leave-active {
+  transition: all 0.3s ease-in-out;
 }
 
-@keyframes open-left {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s linear;
 }
-@keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
