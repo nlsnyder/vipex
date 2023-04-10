@@ -10,6 +10,7 @@
         <EditExpenseForm
           :expense="editState.expense"
           @set-loading="toggleLoading"
+          @close-modal="toggleEditForm"
         />
       </div>
     </template>
@@ -39,11 +40,30 @@
     </template>
   </CommonModal>
   <div>
-    <h2 class="mb-10 text-3xl text-center">Expenses</h2>
+    <h2 class="text-3xl text-center">Expenses</h2>
+    <div class="flex flex-col items-center justify-center m-auto mb-4">
+      <FormKit
+        type="select"
+        label="Sort by:"
+        placeholder="Default"
+        name="sort"
+        default="descending"
+        :options="{
+          ascending: 'Least recent',
+          descending: 'Most recent',
+        }"
+        :classes="{
+          outer: 'my-3',
+          wrapper: 'flex gap-4 items-center',
+          input: inputClasses,
+        }"
+        v-model="sortDirection"
+      />
+    </div>
     <div class="background p-3 md:p-10 rounded-lg shadow-lg">
       <ul class="list-none flex flex-col gap-y-6">
         <li
-          v-for="expense in props.userExpenses"
+          v-for="expense in sortedExpenses"
           :key="expense.itemId"
           @click="toggleEditForm(undefined, expense)"
           class="flex items-stretch gap-x-4 background-light rounded-lg shadow overflow-hidden hover:cursor-pointer"
@@ -84,13 +104,17 @@ import { UserExpense } from "@/interfaces/expenses/interfaces";
 import EditExpenseForm from "./EditExpenseForm.vue";
 import { getAssociatedMonth } from "@/util/enums";
 import { ModalType } from "@/util/enums";
-import { reactive } from "vue";
+import { computed, reactive, ref } from "vue";
 
 interface ViewExpensesProps {
   userExpenses: UserExpense[];
 }
 
 const props = defineProps<ViewExpensesProps>();
+const sortDirection = ref<string>();
+
+const inputClasses =
+  "p-1 border-2 rounded border-slate-400 focus:border-orange-300 outline-none";
 
 const editState = reactive<{
   editExpense: boolean;
@@ -102,9 +126,32 @@ const editState = reactive<{
   expense: undefined,
 });
 
+const getSortedExpenses = () => {
+  const expenses = props.userExpenses;
+  let sorted;
+  if (sortDirection.value && sortDirection.value === "ascending") {
+    sorted = expenses.sort((expense1, expense2) => {
+      let x = expense1.datePurchased.split("-").join();
+      let y = expense2.datePurchased.split("-").join();
+      return x < y ? -1 : x > y ? 1 : 0;
+    });
+  } else {
+    sorted = expenses.sort((expense1, expense2) => {
+      let x = expense1.datePurchased.split("-").join();
+      let y = expense2.datePurchased.split("-").join();
+      return x > y ? -1 : x < y ? 1 : 0;
+    });
+  }
+  return sorted;
+};
+
 const formattedPrice = (amount: string | number) => {
   return `$ ${amount}`;
 };
+
+const sortedExpenses = computed(() => {
+  return getSortedExpenses();
+});
 
 const getMonth = (date: string) => {
   const dateSplit = date.split("-");
@@ -120,7 +167,7 @@ const getYear = (date: string) => {
   return date.split("-")[0];
 };
 
-const toggleEditForm = (event?: MouseEvent, userExpense?: UserExpense) => {
+const toggleEditForm = (_event?: MouseEvent, userExpense?: UserExpense) => {
   editState.editExpense = !editState.editExpense;
   if (userExpense) {
     editState.expense = userExpense;
