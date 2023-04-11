@@ -113,7 +113,7 @@ const emit = defineEmits<{
 
 // Component constants
 const inputClasses =
-  " outline outline-neutral-300 focus:outline-none focus:ring-4 focus:ring-sky-400 rounded p-2 w-full";
+  "outline outline-neutral-300 focus:outline-none focus:ring-4 focus:ring-sky-400 rounded p-2 w-full";
 
 const submitButtonClasses =
   "bg-slate-200 font-medium rounded p-3 hover:bg-slate-300 active:ring-sky-500 active:ring w-full";

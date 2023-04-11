@@ -41,10 +41,11 @@
   </CommonModal>
   <div>
     <h2 class="text-3xl text-center">Expenses</h2>
-    <div class="flex flex-col items-center justify-center m-auto mb-4">
+
+    <div class="w-full flex flex-wrap items-center justify-between mt-8 mb-2">
       <FormKit
         type="select"
-        label="Sort by:"
+        label="Sort by"
         placeholder="Default"
         name="sort"
         default="descending"
@@ -53,11 +54,38 @@
           descending: 'Most recent',
         }"
         :classes="{
-          outer: 'my-3',
-          wrapper: 'flex gap-4 items-center',
+          outer: 'w-1/4',
           input: inputClasses,
         }"
         v-model="sortDirection"
+      />
+      <FormKit
+        label="Filter"
+        :classes="{
+          outer: 'w-1/3',
+          input: inputClasses,
+        }"
+        v-model="filterBar"
+      />
+      <FormKit
+        type="select"
+        label="Month"
+        placeholder="Select"
+        name="month"
+        default="jan"
+        :options="{
+          jan: 'January',
+          feb: 'February',
+          mar: 'March',
+          apr: 'April',
+          may: 'May',
+          Jun: 'June',
+        }"
+        :classes="{
+          outer: 'w-1/4',
+          input: inputClasses,
+        }"
+        v-model="sortMonth"
       />
     </div>
     <div class="background p-3 md:p-10 rounded-lg shadow-lg">
@@ -112,9 +140,11 @@ interface ViewExpensesProps {
 
 const props = defineProps<ViewExpensesProps>();
 const sortDirection = ref<string>();
+const sortMonth = ref<string>();
+const filterBar = ref<string>("");
 
 const inputClasses =
-  "p-1 border-2 rounded border-slate-400 focus:border-orange-300 outline-none";
+  "outline outline-neutral-300 focus:outline-none focus:ring-2 focus:ring-sky-400 rounded p-1 w-full";
 
 const editState = reactive<{
   editExpense: boolean;
@@ -126,7 +156,7 @@ const editState = reactive<{
   expense: undefined,
 });
 
-const getSortedExpenses = () => {
+const getSortedAndFilteredExpenses = () => {
   const expenses = props.userExpenses;
   let sorted;
   if (sortDirection.value && sortDirection.value === "ascending") {
@@ -142,15 +172,20 @@ const getSortedExpenses = () => {
       return x > y ? -1 : x < y ? 1 : 0;
     });
   }
+  if (filterBar.value !== "") {
+    sorted = sorted.filter((expense) =>
+      expense.retailerName.includes(filterBar.value)
+    );
+  }
   return sorted;
 };
 
 const formattedPrice = (amount: string | number) => {
-  return `$ ${amount}`;
+  return `$${amount}`;
 };
 
 const sortedExpenses = computed(() => {
-  return getSortedExpenses();
+  return getSortedAndFilteredExpenses();
 });
 
 const getMonth = (date: string) => {
