@@ -74,12 +74,19 @@
         name="month"
         default="jan"
         :options="{
-          jan: 'January',
-          feb: 'February',
-          mar: 'March',
-          apr: 'April',
-          may: 'May',
-          Jun: 'June',
+          0: 'All',
+          1: 'January',
+          2: 'February',
+          3: 'March',
+          4: 'April',
+          5: 'May',
+          6: 'June',
+          7: 'July',
+          8: 'August',
+          9: 'September',
+          10: 'October',
+          11: 'November',
+          12: 'December',
         }"
         :classes="{
           outer: 'w-1/4',
@@ -140,7 +147,7 @@ interface ViewExpensesProps {
 
 const props = defineProps<ViewExpensesProps>();
 const sortDirection = ref<string>();
-const sortMonth = ref<string>();
+const sortMonth = ref<number>(0);
 const filterBar = ref<string>("");
 
 const inputClasses =
@@ -174,8 +181,14 @@ const getSortedAndFilteredExpenses = () => {
   }
   if (filterBar.value !== "") {
     sorted = sorted.filter((expense) =>
-      expense.retailerName.includes(filterBar.value)
+      expense.retailerName.toLowerCase().includes(filterBar.value.toLowerCase())
     );
+  }
+  if (Number(sortMonth.value) !== 0) {
+    sorted = sorted.filter((expense) => {
+      let date = expense.datePurchased.split("-");
+      return parseInt(date[1]) === Number(sortMonth.value);
+    });
   }
   return sorted;
 };
