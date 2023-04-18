@@ -130,6 +130,25 @@
         </li>
       </ul>
     </div>
+    <div
+      class="border border-slate-800 p-4 mt-6 rounded w-full md:w-2/3 mx-auto"
+    >
+      <dl class="flex flex-col gap-2">
+        <div class="flex justify-between items-center">
+          <dt class="font-semibold">Gross Income :</dt>
+          <dd>$1200</dd>
+        </div>
+        <div class="flex justify-between items-center">
+          <dt class="font-semibold">Total Expenditures :</dt>
+          <dd>{{ getTotalExpenditures }}</dd>
+        </div>
+        <hr />
+        <div class="flex justify-between items-center">
+          <dt class="font-semibold">Net Income :</dt>
+          <dd>$0</dd>
+        </div>
+      </dl>
+    </div>
   </div>
 </template>
 
@@ -193,13 +212,19 @@ const getSortedAndFilteredExpenses = () => {
   return sorted;
 };
 
-const formattedPrice = (amount: string | number) => {
-  return `$${amount}`;
-};
-
 const sortedExpenses = computed(() => {
   return getSortedAndFilteredExpenses();
 });
+
+const getTotalExpenditures = computed(() => {
+  let sum = 0;
+  sortedExpenses.value.forEach((expense) => (sum += Number(expense.cost)));
+  return formattedPrice(sum);
+});
+
+const formattedPrice = (amount: string | number) => {
+  return `$${Number(amount).toFixed(2)}`;
+};
 
 const getMonth = (date: string) => {
   const dateSplit = date.split("-");
