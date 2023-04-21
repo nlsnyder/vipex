@@ -104,8 +104,13 @@ const fetchUserExpenses = async () => {
   let user: User | null = null;
   user = getAuth().currentUser;
   if (user != null) {
+    let idToken = await user?.getIdToken();
     try {
-      const response = await firebase.getExpensesForUser(user.uid);
+      const response = await firebase.getExpensesForUser(user.uid, {
+        params: {
+          auth: idToken,
+        },
+      });
       if (response.status === 200) {
         if (response.data) {
           let loadedExpenses: UserExpense[] = [];

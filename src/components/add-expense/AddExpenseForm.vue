@@ -145,10 +145,14 @@ const submitExpense = async (fields: UserExpense) => {
     auth = authStore.authState.user;
   }
   try {
+    const idToken = await getAuth().currentUser?.getIdToken();
     // Add expense for user in firebase
     const response: AxiosResponse<UserExpense, any> | null =
       await firebase.addExpenseForUser(auth?.uid, fields, {
         method: "POST",
+        params: {
+          auth: idToken,
+        },
       });
     if (response != null && response.status === 200) {
       emitFormSubmit(true, ["Your expense has been added!"]);
@@ -162,6 +166,7 @@ const submitExpense = async (fields: UserExpense) => {
     }
     emit("updateLoading", false);
   } catch (error) {
+    console.log(error);
     emitFormSubmit(false, ["An error occurred while adding your expense."]);
     emit("updateLoading", false);
   }

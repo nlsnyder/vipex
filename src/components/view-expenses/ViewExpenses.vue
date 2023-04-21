@@ -42,7 +42,7 @@
   <div>
     <h2 class="text-3xl text-center">Expenses</h2>
 
-    <div class="w-full flex flex-wrap items-center justify-between mt-8 mb-2">
+    <div class="w-full flex flex-wrap items-center justify-between mt-8 mb-4">
       <FormKit
         type="select"
         label="Sort by"

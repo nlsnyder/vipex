@@ -22,9 +22,10 @@ export class FirebaseService {
    * @param userId - userId that axpenses should be grabbed for
    */
   async getExpensesForUser(
-    userId: string | undefined
+    userId: string | undefined,
+    config: AxiosRequestConfig
   ): Promise<AxiosResponse<UserExpense[]>> {
-    return this.http.get(this.expensesUrl + `/${userId}.json`, {});
+    return this.http.get(this.expensesUrl + `/${userId}.json`, config);
   }
 
   /**
@@ -58,7 +59,10 @@ export class FirebaseService {
     userId: string | undefined,
     expenseId: string,
     config: AxiosRequestConfig
-  ): Promise<AxiosResponse<UserExpense>> {
+  ): Promise<AxiosResponse<UserExpense>> | null {
+    if (!userId) {
+      return null;
+    }
     return this.http.get<UserExpense>(
       this.expensesUrl + `/${userId}/${expenseId}`,
       config

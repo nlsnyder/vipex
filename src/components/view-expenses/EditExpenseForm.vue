@@ -133,18 +133,25 @@ const handleEditExpense = async (formFields: UserExpense) => {
 
   try {
     let user: User | null = null;
+    let idToken;
     if (!authStore.authState.user) {
       user = getAuth().currentUser;
+      idToken = await getAuth().currentUser?.getIdToken();
       authStore.setAuthState({ ...authStore.authState, user });
     } else {
       user = authStore.authState.user;
+      idToken = await user.getIdToken();
     }
 
     const response = await firebase.editExpenseById(
       user?.uid,
       itemId,
       expense as UserExpense,
-      {}
+      {
+        params: {
+          auth: idToken,
+        },
+      }
     );
     console.log(response);
     let filteredExpenses = expenseStore.expenses.filter(
