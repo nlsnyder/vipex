@@ -1,0 +1,22 @@
+{
+  "rules": {
+    "expenses": {
+      "$user_id": {
+        // grants write access to the owner of this user account
+        // whose uid must exactly match the key ($user_id)
+        ".write": "auth.uid === $user_id",
+        ".read": "auth !== null && auth.uid == $user_id",
+        "$expense_id": {
+          "cost": { ".validate": true },
+      		"datePurchased": { ".validate": true },
+          "itemDescription": { ".validate": true },
+          "retailerName": { ".validate": true },
+
+      		// but no other child paths are allowed
+      		// in this case, $other means any key excluding the above 4
+      		"$other": { ".validate": false }
+        }
+      }
+    }
+  }
+}
