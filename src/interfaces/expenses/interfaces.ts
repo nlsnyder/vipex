@@ -14,3 +14,7 @@ export interface BaseFirebaseResponse {
   ok: boolean;
   messages?: string[];
 }
+
+export interface ExpensePostResponse extends BaseFirebaseResponse {
+  name: string;
+}

@@ -43,7 +43,7 @@
         suffixIcon:
           'w-7 pr-3 flex self-stretch grow-0 shrink-0 hover:cursor-pointer',
         inner:
-          'rounded flex items-center max-w-md ring-1 ring-slate-500 focus-within:ring-orange-300 focus-within:ring',
+          'rounded flex items-center ring-1 ring-slate-500 focus-within:ring-orange-300 focus-within:ring',
         messages: 'mt-2',
         message: 'text-red-500 text-sm',
       }"

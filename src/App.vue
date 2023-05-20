@@ -70,6 +70,10 @@ html {
 }
 
 .background-main {
-  background-color: #f9a339;
+  background-color: #f9a339 !important;
+}
+
+.background-secondary {
+  background-color: #ffc681 !important;
 }
 </style>

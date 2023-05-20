@@ -33,7 +33,7 @@
         messages: 'mt-2',
         message: 'text-red-500 text-sm',
       }"
-      validation="required|matches:/^[a-zA-Z0-9. -]*$/"
+      validation="required|matches:/^[a-zA-Z0-9. -']*$/"
     />
     <FormKit
       type="text"
@@ -95,7 +95,10 @@
 <script setup lang="ts">
 import { UserExpense } from "@/interfaces/expenses/interfaces";
 import { FormKit } from "@formkit/vue";
-import { BaseFirebaseResponse } from "@/interfaces/expenses/interfaces";
+import {
+  ExpensePostResponse,
+  BaseFirebaseResponse,
+} from "@/interfaces/expenses/interfaces";
 import { FirebaseService } from "@/services/FirebaseService";
 import { useAuthStore } from "@/stores/auth";
 import { getAuth, User } from "firebase/auth";
@@ -147,7 +150,7 @@ const submitExpense = async (fields: UserExpense) => {
   try {
     const idToken = await getAuth().currentUser?.getIdToken();
     // Add expense for user in firebase
-    const response: AxiosResponse<UserExpense, any> | null =
+    const response: AxiosResponse<ExpensePostResponse, any> | null =
       await firebase.addExpenseForUser(auth?.uid, fields, {
         method: "POST",
         params: {
@@ -156,6 +159,7 @@ const submitExpense = async (fields: UserExpense) => {
       });
     if (response != null && response.status === 200) {
       emitFormSubmit(true, ["Your expense has been added!"]);
+      fields.itemId = response.data.name;
       expenseStore.$patch((state) => {
         state.expenses.push(fields);
       });

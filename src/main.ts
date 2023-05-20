@@ -10,8 +10,12 @@ import { createPinia } from "pinia";
 import { firebaseConfig } from "../firebase.config";
 import { initializeApp } from "firebase/app";
 import { VueQueryPlugin } from "vue-query";
+import PrimeVue from "primevue/config";
 import SyncLoader from "vue-spinner/src/SyncLoader.vue";
 import "./index.css";
+import "primevue/resources/primevue.min.css"; //core CSS
+import "primeicons/primeicons.css"; //icons
+import "primevue/resources/themes/lara-light-blue/theme.css";
 
 import {
   faMoneyBillTrendUp,
@@ -25,6 +29,7 @@ import {
   faArrowRight,
   faQuestion,
   faEllipsisVertical,
+  faHand,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTwitter,
@@ -50,7 +55,8 @@ library.add(
   faX,
   faArrowRight,
   faQuestion,
-  faEllipsisVertical
+  faEllipsisVertical,
+  faHand
 );
 
 //initialize firebase app
@@ -61,6 +67,7 @@ createApp(App)
   .use(router)
   .use(createPinia())
   .use(VueQueryPlugin)
+  .use(PrimeVue, { ripple: true })
   .use(
     plugin,
     defaultConfig({

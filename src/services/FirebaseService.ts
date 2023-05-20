@@ -8,6 +8,7 @@ import { AxiosRequestConfig, AxiosResponse } from "axios";
 export class FirebaseService {
   private httpInstance: AxiosHttp | null = null;
   private expensesUrl = "/expenses";
+  private salaryUrl = "/salary";
 
   private get http() {
     return this.httpInstance != null ? this.httpInstance : new AxiosHttp();
@@ -37,7 +38,7 @@ export class FirebaseService {
     userId: string | undefined,
     expense: UserExpense,
     config: AxiosRequestConfig
-  ): Promise<AxiosResponse<UserExpense, any>> | null {
+  ): Promise<AxiosResponse> | null {
     if (!userId) {
       return null;
     }
@@ -59,12 +60,12 @@ export class FirebaseService {
     userId: string | undefined,
     expenseId: string,
     config: AxiosRequestConfig
-  ): Promise<AxiosResponse<UserExpense>> | null {
+  ): Promise<AxiosResponse> | null {
     if (!userId) {
       return null;
     }
     return this.http.get<UserExpense>(
-      this.expensesUrl + `/${userId}/${expenseId}`,
+      this.expensesUrl + `/${userId}/${expenseId}.json`,
       config
     );
   }
@@ -80,11 +81,46 @@ export class FirebaseService {
     expenseId: string,
     expense: UserExpense,
     config: AxiosRequestConfig
-  ): Promise<AxiosResponse<any>> {
+  ): Promise<AxiosResponse> | null {
+    if (!userId) {
+      return null;
+    }
     return this.http.put<UserExpense>(
       this.expensesUrl + `/${userId}/${expenseId}.json`,
       expense,
       config
     );
+  }
+
+  /**
+   * Adds salary for given user
+   * @param userId - user id of user
+   * @param salary - salary for a year
+   * @param config - axios config
+   * @returns Promise
+   */
+  addSalaryForUser(
+    userId: string | undefined,
+    salary: number | string,
+    config: AxiosRequestConfig
+  ): Promise<AxiosResponse> | null {
+    if (!userId) {
+      return null;
+    }
+    return this.http.put<number | string>(
+      this.salaryUrl + `/${userId}.json`,
+      salary,
+      config
+    );
+  }
+
+  getSalaryForUser(
+    userId: string | undefined,
+    config: AxiosRequestConfig
+  ): Promise<AxiosResponse> | null {
+    if (!userId) {
+      return null;
+    }
+    return this.http.get(this.salaryUrl + `/${userId}.json`, config);
   }
 }

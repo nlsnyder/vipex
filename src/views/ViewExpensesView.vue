@@ -90,19 +90,37 @@ expenseStore.$subscribe(
   { detached: true }
 );
 
-onMounted(() => {
+onMounted(async () => {
+  fetchUserSalary();
   fetchUserExpenses();
 });
 
+const fetchUserSalary = async () => {
+  let user: User | null = getAuth().currentUser;
+  if (user != null) {
+    try {
+      const response = await firebase.getSalaryForUser(user.uid, {});
+      if (response != null && response.status === 200) {
+        expenseStore.$patch({
+          ...expenseStore.$state,
+          salary: response.data,
+          fetchState: { ...expenseStore.$state.fetchState, salary: true },
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+
 const fetchUserExpenses = async () => {
   queryState.loading = true;
-  if (expenseStore.expenses.length > 0) {
+  if (expenseStore.expenses.length > 0 && expenseStore.fetchState.expenses) {
     queryState.userExpenses = expenseStore.expenses;
     queryState.loading = false;
     return;
   }
-  let user: User | null = null;
-  user = getAuth().currentUser;
+  let user: User | null = getAuth().currentUser;
   if (user != null) {
     let idToken = await user?.getIdToken();
     try {
@@ -121,6 +139,7 @@ const fetchUserExpenses = async () => {
           queryState.userExpenses = loadedExpenses;
           expenseStore.$patch({
             expenses: loadedExpenses,
+            fetchState: { ...expenseStore.$state.fetchState, expenses: true },
           });
         }
       }
