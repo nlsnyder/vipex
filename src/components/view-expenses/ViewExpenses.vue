@@ -39,7 +39,7 @@
       </div>
     </template>
   </CommonModal>
-  <div>
+  <div class="mb-10">
     <AddSalary v-if="!expenseStore.salary" />
     <div v-else>
       <h2 class="text-3xl text-center">Expenses</h2>
