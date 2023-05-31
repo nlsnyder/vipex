@@ -12,9 +12,11 @@
     >
       <i class="pi pi-info-circle"></i>
     </div>
-    <div :class="{ active: showTooltip, 'tooltip-text': true }">
+    <div
+      :class="{ active: showTooltip, 'tooltip-text': true, 'shadow-lg': true }"
+    >
       <div class="carat"></div>
-      <div class="tooltip-message"><slot></slot></div>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -37,38 +39,31 @@ const showTooltip = ref(false);
 
 .tooltip-text {
   position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #f9a339;
-  color: #333;
+  visibility: hidden;
+  background-color: #ffc681;
+  border: 2px solid #f9a339;
+  color: #444;
   padding: 10px;
   border-radius: 4px;
-  opacity: 1;
-  visibility: hidden;
-  transition: opacity 0.2s ease-in-out;
-  z-index: 1000;
-  inline-size: 300px;
-  overflow-wrap: break-word;
+  white-space: normal;
+  left: 25px; /* Adjust the distance from the icon */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 250px;
+  max-height: 200px;
+  overflow-wrap: anywhere;
 }
 
 .tooltip-text.active {
   visibility: visible;
 }
-
-.tooltip-message {
-  width: 300px;
-  max-height: 200px;
-  overflow-wrap: anywhere;
-}
-
 .carat {
   position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid #f9a339;
+  top: 50%;
+  left: -10px;
+  transform: translateY(-50%);
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #f9a339;
 }
 </style>
